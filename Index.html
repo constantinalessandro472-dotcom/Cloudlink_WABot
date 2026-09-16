@@ -69,8 +69,8 @@
             };
 
             try {
-                // Spara la bomba al tuo webhook
-                const response = await fetch('https://cloudlink-wabot.onrender.com/', {
+                // Spara la bomba al webhook corretto!
+                const response = await fetch('/webhook', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -80,10 +80,11 @@
                     alert("✅ Prenotazione inviata! Controlla WhatsApp.");
                     this.reset(); // Svuota i campi
                 } else {
-                    alert("❌ Cazzo, errore dal server. Controlla il terminale di VS Code.");
+                    const err = await response.json();
+                    alert("❌ Cazzo, errore dal server. Dettagli: " + JSON.stringify(err));
                 }
             } catch (error) {
-                alert("⚠️ Errore di rete. Hai il server Python e il tunnel accesi?");
+                alert("⚠️ Errore di rete col server Cloud. Riprova tra 30 secondi.");
             } finally {
                 btn.innerText = "CONFERMA TAVOLO";
                 btn.disabled = false;
