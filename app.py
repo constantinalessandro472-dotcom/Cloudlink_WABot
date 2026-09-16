@@ -20,7 +20,7 @@ from datetime import datetime
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 load_dotenv()
 
@@ -157,8 +157,13 @@ def ricevi_prenotazione():
     message_id = risultato.get("messages", [{}])[0].get("id")
     logger.info("Prenotazione notificata (message_id=%s): %s", message_id, dati)
     return jsonify({"successo": True, "whatsapp_message_id": message_id}), 200
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-
+@app.route("/salute", methods=["GET"])
+def salute():
+   
 @app.route("/salute", methods=["GET"])
 def salute():
     return jsonify({"stato": "ok"}), 200
@@ -167,9 +172,4 @@ def salute():
 if __name__ == "__main__":
     porta = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=porta, debug=False)
-
-from flask import render_template
-
-@app.route('/')
-def home():
-    return render_template('index.html')
+  
