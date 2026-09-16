@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazione Tavolo</title>
+    <!-- Carico Tailwind per non farti scrivere CSS a mano -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+    
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700">
+        <h2 class="text-3xl font-bold mb-6 text-center text-pink-500">Prenota Ora</h2>
+        
+        <form id="formPrenotazione" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-300">Nome</label>
+                <input type="text" id="nome" placeholder="Mario Rossi" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-pink-500" required>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-300">Telefono</label>
+                <input type="tel" id="telefono" placeholder="393..." class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-pink-500" required>
+            </div>
+
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium mb-1 text-gray-300">Data</label>
+                    <input type="date" id="data" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-pink-500" required>
+                </div>
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium mb-1 text-gray-300">Ora</label>
+                    <input type="time" id="ora" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-pink-500" required>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-300">Coperti</label>
+                <select id="coperti" class="w-full p-3 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:border-pink-500">
+                    <option value="1">1 Persona</option>
+                    <option value="2" selected>2 Persone</option>
+                    <option value="3">3 Persone</option>
+                    <option value="4">4 Persone</option>
+                    <option value="5">5+ Persone</option>
+                </select>
+            </div>
+
+            <button type="submit" id="btnInvia" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded transition duration-200 mt-4 shadow-lg shadow-pink-500/30">
+                CONFERMA TAVOLO
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('formPrenotazione').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Blocca il ricaricamento inutile della pagina
+            
+            const btn = document.getElementById('btnInvia');
+            btn.innerText = "Elaborazione...";
+            btn.disabled = true;
+
+            // Raccogliamo i dati inseriti nel modulo
+            const payload = {
+                nome: document.getElementById('nome').value,
+                telefono: document.getElementById('telefono').value,
+                coperti: parseInt(document.getElementById('coperti').value),
+                data: document.getElementById('data').value,
+                ora: document.getElementById('ora').value
+            };
+
+            try {
+                // Spara la bomba al tuo webhook
+                const response = await fetch('https://95hwwd0c-5000.euw.devtunnels.ms/webhook/prenotazione', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert("✅ Prenotazione inviata! Controlla WhatsApp.");
+                    this.reset(); // Svuota i campi
+                } else {
+                    alert("❌ Cazzo, errore dal server. Controlla il terminale di VS Code.");
+                }
+            } catch (error) {
+                alert("⚠️ Errore di rete. Hai il server Python e il tunnel accesi?");
+            } finally {
+                btn.innerText = "CONFERMA TAVOLO";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
