@@ -167,3 +167,9 @@ def salute():
 if __name__ == "__main__":
     porta = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=porta, debug=False)
+
+from flask import render_template
+
+@app.route('/')
+def home():
+    return render_template('index.html')
