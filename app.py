@@ -37,7 +37,7 @@ API_VERSION = os.environ.get("WHATSAPP_API_VERSION", "v20.0")
 @app.route('/')
 def home():
     # Questa è la rotta che fa caricare la tua pagina del Pink Cadillac
-    return render_template('index.html')
+    return render_template('Index.html')
 
 
 @app.route("/salute", methods=["GET"])
